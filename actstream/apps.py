@@ -1,10 +1,9 @@
+from django.apps import AppConfig
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import force_text
 
 from actstream import settings
 from actstream.signals import action
-from actstream.actions import action_handler
-from actstream.compat import AppConfig
 
 try:
     from django.db.backends.mysql.base import DatabaseOperations
@@ -23,6 +22,7 @@ class ActstreamConfig(AppConfig):
     name = 'actstream'
 
     def ready(self):
+        from actstream.actions import action_handler
         action.connect(action_handler, dispatch_uid='actstream.models')
         action_class = self.get_model('action')
 
